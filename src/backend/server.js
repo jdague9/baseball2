@@ -7,7 +7,7 @@ var Percolator = require('percolator').Percolator;
 var dbSession = require('../../src/backend/dbSession');
 
 var Server = function(port) {
-    var server = Percolator({'port': port, 'autoLink': false});
+    var server = Percolator({'port': port, 'autoLink': false, 'staticDir': __dirname + '/../frontend'});
 
     server.route('/api/hitters',
         {
