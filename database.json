@@ -1,0 +1,17 @@
+{
+  "test": {
+    "driver": "sqlite3",
+    "filename": "/var/tmp/baseball2.test.sqlite"
+  },
+  "dev": {
+    "driver": "sqlite3",
+    "filename": "/var/tmp/baseball2.dev.sqlite"
+  },
+  "production": {
+    "driver": "mysql",
+    "host": "localhost",
+    "user": "root",
+    "password": "root",
+    "database": "baseball2"
+  }
+}

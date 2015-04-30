@@ -5,10 +5,31 @@
 
 var request = require('request');
 var dbSession = require('../../src/backend/dbSession.js');
+var Server = require('../../src/backend/server.js').Server;
 var resetDatabase = require('../resetDatabase.js');
 var async = require('async');
 
 describe('The API', function() {
+
+    var server;
+
+    beforeEach(function(done) {
+        server = Server('8081');
+        server.listen(function(err) {
+            resetDatabase(dbSession, function() {
+                done(err);
+            });
+        });
+    });
+
+    afterEach(function(done) {
+        server.close(function() {
+            resetDatabase(dbSession, function() {
+                done();
+            });
+        });
+    });
+
     it('should respond to a GET request at /api/hitters/', function(done) {
         var outcomes1 = {
             "r": {
@@ -321,9 +342,6 @@ describe('The API', function() {
         async.series(
             [
                 function (callback) {
-                    resetDatabase(dbSession, callback);
-                },
-                function (callback) {
                     dbSession.insert(
                         'hitters',
                         {
@@ -416,7 +434,7 @@ describe('The API', function() {
             function (err, results) {
                 request.get(
                     {
-                        'url': 'http://localhost:8080/api/hitters/',
+                        'url': 'http://localhost:8081/api/hitters/',
                         'json': true
                     },
                     function (err, res, body) {
@@ -603,11 +621,11 @@ describe('The API', function() {
                     "error_chance": 8,
                     "injury_num": 16,
                     "injury_letter": "c",
-                    "positions": [12],
-                    "grade": {
+                    //"positions": [12],
+                    "grade": JSON.stringify({
                         "away": ['b', null],
                         "home": ['b', null]
-                    },
+                    }),
                     "mip": 3,
                     "bk": 0,
                     "wp": 0,
@@ -630,11 +648,11 @@ describe('The API', function() {
                     "error_chance": 7,
                     "injury_num": null,
                     "injury_letter": "n",
-                    "positions": [11],
-                    "grade": {
+                    //"positions": [11],
+                    "grade": JSON.stringify({
                         "away": ['c', 'b'],
                         "home": ['a', 'aa']
-                    },
+                    }),
                     "mip": 6,
                     "bk": 0,
                     "wp": 100,
@@ -644,9 +662,6 @@ describe('The API', function() {
         };
         async.series(
             [
-                function (callback) {
-                    resetDatabase(dbSession, callback);
-                },
                 function (callback) {
                     dbSession.insert(
                         'pitchers',
@@ -666,11 +681,11 @@ describe('The API', function() {
                             "error_chance": 8,
                             "injury_num": 16,
                             "injury_letter": "c",
-                            "positions": [12],
-                            "grade": {
+                            //"positions": [12],
+                            "grade": JSON.stringify({
                                 "away": ['b', null],
                                 "home": ['b', null]
-                            },
+                            }),
                             "mip": 3,
                             "bk": 0,
                             "wp": 0,
@@ -699,11 +714,11 @@ describe('The API', function() {
                             "error_chance": 7,
                             "injury_num": null,
                             "injury_letter": "n",
-                            "positions": [11],
-                            "grade": {
+                            //"positions": [11],
+                            "grade": JSON.stringify({
                                 "away": ['c', 'b'],
                                 "home": ['a', 'aa']
-                            },
+                            }),
                             "mip": 6,
                             "bk": 0,
                             "wp": 100,
@@ -717,7 +732,7 @@ describe('The API', function() {
             function (err, results) {
                 request.get(
                     {
-                        'url': 'http://localhost:8080/api/pitchers/',
+                        'url': 'http://localhost:8081/api/pitchers/',
                         'json': true
                     },
                     function (err, res, body) {
