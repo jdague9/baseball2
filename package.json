@@ -1,0 +1,25 @@
+{
+  "name": "baseball",
+  "version": "0.0.1",
+  "description": "A simple baseball simulation app",
+  "main": "src/backend/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jordan Dague",
+  "license": "MIT",
+  "dependencies": {
+    "csv-parse": "~0.1.1",
+    "async": "~0.9.0",
+    "node-dbi": "~0.7.1",
+    "percolator": "~1.5.0",
+    "bower": "~1.4.1",
+    "db-migrate": "~0.9.14",
+    "mysql": "~0.9.0",
+    "sqlite3": "~3.0.5"
+  },
+  "devDependencies": {
+    "request": "~2.55.0",
+    "jasmine-node": "~1.14.5"
+  }
+}
