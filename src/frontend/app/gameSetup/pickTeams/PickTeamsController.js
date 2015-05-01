@@ -18,6 +18,8 @@
 
         $scope.resolveEntity = resolveEntity;
 
+        $scope.lineup = [];
+
         /* A repository is the connection between this controller and the REST Api.
          We use one for hitters... */
 
@@ -32,6 +34,13 @@
 
         var PitchersRepository = new RepositoryFactory({
             endpoint: 'pitchers',
+            retrieveItems: function(data) {
+                return data._items;
+            }
+        });
+
+        var TeamsRepository = new RepositoryFactory({
+            endpoint: 'teams',
             retrieveItems: function(data) {
                 return data._items;
             }
@@ -73,20 +82,34 @@
                     displayName: 'Last Name'
                 },
                 {
-                    ///// STOPPED HERE /////
-                    field: 'keywordCategoryID',
-                    displayName: 'Category',
-                    cellTemplate: 'app/keywords/partials/keywordCategoryGridCell.html',
-                    editableCellTemplate: 'app/keywords/partials/keywordCategoryGridCellEditor.html'
+                    /* The keyword category field does not use the build-in cell template, but our own */
+                    field: 'uni_number',
+                    displayName: '#'
+                    //cellTemplate: 'app/keywords/partials/keywordCategoryGridCell.html',
+                    //editableCellTemplate: 'app/keywords/partials/keywordCategoryGridCellEditor.html'
+                },
+                {
+                    field: '',
+                    displayName: 'Positions'
                 },
                 {
                     /* Same goes for the operations column */
-                    field: '',
-                    displayName: 'Operations',
-                    cellTemplate: 'app/keywords/partials/operationsGridCell.html',
-                    enableCellEdit: false,
+                    field: 'bats',
+                    displayName: 'Bats',
+                    //cellTemplate: 'app/keywords/partials/operationsGridCell.html',
+                    //enableCellEdit: false,
                     sortable: false
+                },
+                {
+                    field: 'throws',
+                    displayName: 'Throws'
+                },
+                {
+                    field: '',
+                    displayName: 'Add to Lineup',
+                    cellTemplate: 'app/gameSetup/partials/addToLineup.html'
                 }
+
             ]
         };
 
@@ -94,15 +117,11 @@
         /* These functions are called when the frontend is operated, e.g., if a butt\
          on is clicked */
 
-        $scope.createKeyword = function(newKeyword) {
-            $scope.$broadcast('ngGridEventEndCellEdit');
-            if (newKeyword.value.length > 0) {
-                KeywordsRepository.createOne(newKeyword).then(function () {
-                    KeywordsRepository.readAll().then(function (keywords) {
-                        $scope.keywords = keywords;
-                    });
-                });
-            }
+        $scope.addHitterToLineup = function(hitterid) {
+            $scope.$broadcast('ngGridEventEndHitterLineupAdd');
+            $scope.lineup.append($scope.hitters.filter(function(hitter) {
+                return hitterid === hitter.hitterid;
+            })[0]);
         };
 
         $scope.updateKeyword = function(keyword) {

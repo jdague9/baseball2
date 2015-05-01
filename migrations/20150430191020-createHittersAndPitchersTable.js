@@ -52,7 +52,55 @@ exports.up = function(db, callback) {
                 bk: {type: 'wp'},
                 wp: {type: 'wp'},
                 outcomes: {type: 'text'}
+            }),
+            db.createTable.bind(db, 'teams', {
+                teamid: {type: 'int', primaryKey: true, autoIncrement: true, notNull: true},
+                city_name: {type: 'text', length: '128'},
+                mascot: {type: 'text', length: '128'},
+                abbr: {type: 'text'},
+                permanently_rem: {type: 'int', defaultValue: 0}
+            }),
+            db.createTable.bind(db, 'hitter_positions', {
+                hitter_id: {type: 'int', notNull: true, foreignKey: {
+                    name: 'hitter_positions_hitter_id_fk',
+                    table: 'hitters',
+                    mapping: 'hitterid'
+                }},
+                position: {type: 'int', notNull: true}
+            }),
+            db.createTable.bind(db, 'pitcher_positions', {
+                pitcher_id: {type: 'int', notNull: true, foreignKey: {
+                    name: 'pitcher_positions_pitcher_id_fk',
+                    table: 'pitchers',
+                    mapping: 'pitcherid'
+                }},
+                position: {type: 'text', notNull: true}
+            }),
+            db.createTable.bind(db, 'team_hitter_map', {
+                team_id: {type: 'int', notNull: true, foreignKey: {
+                    name: 'team_hitter_map_team_id_fk',
+                    table: 'teams',
+                    mapping: 'teamid'
+                }},
+                hitter_id: {type: 'int', notNull: true, foreignKey: {
+                    name: 'team_hitter_map_hitter_id_fk',
+                    table: 'hitters',
+                    mapping: 'hitterid'
+                }}
+            }),
+            db.createTable.bind(db, 'team_pitcher_map', {
+                team_id: {type: 'int', notNull: true, foreignKey: {
+                    name: 'team_pitcher_map_team_id_fk',
+                    table: 'teams',
+                    mapping: 'teamid'
+                }},
+                hitter_id: {type: 'int', notNull: true, foreignKey: {
+                    name: 'team_pitcher_map_pitcher_id_fk',
+                    table: 'pitchers',
+                    mapping: 'pitcherid'
+                }}
             })
+
         ], callback);
 };
 
@@ -60,6 +108,11 @@ exports.down = function(db, callback) {
     async.series(
         [
             db.dropTable.bind(db, 'hitters'),
-            db.dropTable.bind(db, 'pitchers')
+            db.dropTable.bind(db, 'pitchers'),
+            db.dropTable.bind(db, 'teams'),
+            db.dropTable.bind(db, 'hitter_positions'),
+            db.dropTable.bind(db, 'pitcher_positions'),
+            db.dropTable.bind(db, 'team_hitter_map'),
+            db.dropTable.bind(db, 'team_pitcher_map')
         ], callback);
 };

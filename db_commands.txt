@@ -1,7 +1,7 @@
 CREATE TABLE hitters (hitterid INTEGER PRIMARY KEY, last_name TEXT, first_name TEXT, team TEXT, year INTEGER, uni_number INTEGER, grade_letter TEXT, grade_number INTEGER, bats TEXT, throws TEXT, base_running TEXT, sb_chance INTEGER, sb_opp TEXT, sh_chance INTEGER, arm TEXT, ar INTEGER, range TEXT, error_chance INTEGER, injury_num INTEGER, injury_letter TEXT, outcomes TEXT)
 CREATE TABLE pitchers (pitcherid INTEGER PRIMARY KEY, last_name TEXT, first_name TEXT, team TEXT, year INTEGER, uni_number INTEGER, bats TEXT, throws TEXT, base_running TEXT, sb_chance INTEGER, sb_opp TEXT, sh_chance INTEGER, range TEXT, error_chance INTEGER, injury_num INTEGER, injury_letter TEXT, grade TEXT, mip INTEGER, bk INTEGER, wp INTEGER, outcomes TEXT)
 CREATE TABLE hitter_positions (hitter_id INTEGER NOT NULL, position INTEGER, FOREIGN KEY(hitter_id) REFERENCES hitters(hitterid))
-CREATE TABLE pitcher_positions (pitcher_id INTEGER NOT NULL, position INTEGER, FOREIGN KEY(pitcher_id) REFERENCES pitchers(pitcherid))
+CREATE TABLE pitcher_positions (pitcher_id INTEGER NOT NULL, position TEXT, FOREIGN KEY(pitcher_id) REFERENCES pitchers(pitcherid))
 CREATE TABLE teams (teamid INTEGER PRIMARY KEY, city_name TEXT, mascot TEXT, abbr TEXT, permanently_rem INTEGER)
 CREATE TABLE team_hitter_map (team_id INTEGER NOT NULL, hitter_id INTEGER NOT NULL, FOREIGN KEY(team_id) REFERENCES teams(teamid), FOREIGN KEY(hitter_id) REFERENCES hitters(hitterid))
 CREATE TABLE team_pitcher_map (team_id INTEGER NOT NULL, pitcher_ID INTEGER NOT NULL, FOREIGN KEY(team_id) REFERENCES teams(teamid), FOREIGN KEY(pitcher_id) REFERENCES pitchers(pitcherid))

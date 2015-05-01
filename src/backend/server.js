@@ -43,6 +43,21 @@ var Server = function(port) {
             }
         }
     );
+    server.route('/api/teams',
+        {
+            GET: function (req, res) {
+                dbSession.fetchAll('SELECT teamid, city_name, mascot, abbr, permanently_rem  FROM teams ORDER BY teamid',
+                    function(err, rows) {
+                        if(err) {
+                            console.log(err);
+                            res.status.internalServerError(err);
+                        } else {
+                            res.collection(rows).send();
+                        }
+                    });
+            }
+        }
+    );
     return server;
 };
 

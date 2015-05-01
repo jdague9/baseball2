@@ -744,4 +744,68 @@ describe('The API', function() {
             }
         );
     });
+
+    it('should respond to a GET request at /api/teams/', function(done) {
+        var expected = {
+            "_items": [
+                {
+                    "teamid": 1,
+                    "city_name": "Baltimore",
+                    "mascot": "Orioles",
+                    "abbr": "BAL",
+                    "permanently_rem": 0
+                },
+                {
+                    "teamid": 2,
+                    "city_name": "Boston",
+                    "mascot": "Red Sox",
+                    "abbr": "BOS",
+                    "permanently_rem": 0
+                }
+            ]
+        };
+        async.series(
+            [
+                function (callback) {
+                    dbSession.insert(
+                        'teams',
+                        {
+                            "city_name": "Baltimore",
+                            "mascot": "Orioles",
+                            "abbr": "BAL",
+                            "permanently_rem": 0
+                        },
+                        function (err) {
+                            callback(err)
+                        });
+                },
+                function (callback) {
+                    dbSession.insert(
+                        'teams',
+                        {
+                            "city_name": "Boston",
+                            "mascot": "Red Sox",
+                            "abbr": "BOS",
+                            "permanently_rem": 0
+                        },
+                        function (err) {
+                            callback(err)
+                        });
+                }
+            ],
+            function (err, results) {
+                request.get(
+                    {
+                        'url': 'http://localhost:8081/api/teams/',
+                        'json': true
+                    },
+                    function (err, res, body) {
+                        expect(res.statusCode).toBe(200);
+                        expect(body).toEqual(expected);
+                        done();
+                    }
+                );
+            }
+        );
+    });
 });
